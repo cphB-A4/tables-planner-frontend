@@ -14,6 +14,7 @@ import BoardAdmin from "./components/BoardAdmin";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
+import EventBoard from "./components/EventBoard";
 
 const App = () => {
   
@@ -46,68 +47,67 @@ const App = () => {
 
   return (
     <>
-    <ul className="header">
-      <li>
-        <NavLink exact activeClassName="active" to="/home">
-          Home
-        </NavLink>
-      </li>
-
-      {showAdminBoard && (
+      <ul className="header">
         <li>
-          <NavLink exact activeClassName="active" to="/admin">
-            Admin Board
+          <NavLink exact activeClassName="active" to="/home">
+            Home
           </NavLink>
         </li>
-      )}
-      {console.log(JSON.stringify(currentUser))}
-      {currentUser && (
-        <li>
-          <NavLink exact activeClassName="active" to="/user">
-            User
-          </NavLink>
-        </li>
-      )}
 
-      {currentUser ? (
-        <>
+        {showAdminBoard && (
           <li>
-            <NavLink exact activeClassName="active" to="/profile">
-              {currentUser.username}
+            <NavLink exact activeClassName="active" to="/admin">
+              Admin Board
             </NavLink>
           </li>
+        )}
+        {console.log(JSON.stringify(currentUser))}
+        {currentUser && (
           <li>
-            <a href="/login" className="nav-link" onClick={logOut}>
-              LogOut
-            </a>
-          </li>
-        </>
-      ) : (
-        <>
-          <li>
-            <NavLink exact activeClassName="active" to="/login">
-              Login
+            <NavLink exact activeClassName="active" to="/user">
+              User
             </NavLink>
           </li>
-          <li>
-            <NavLink exact activeClassName="active" to="/register">
-              Sign Up
-            </NavLink>
-          </li>
-        </>
-      )}
-</ul>
+        )}
+
+        {currentUser ? (
+          <>
+            <li>
+              <NavLink exact activeClassName="active" to="/profile">
+                {currentUser.username}
+              </NavLink>
+            </li>
+            <li>
+              <a href="/login" className="nav-link" onClick={logOut}>
+                LogOut
+              </a>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <NavLink exact activeClassName="active" to="/login">
+                Login
+              </NavLink>
+            </li>
+            <li>
+              <NavLink exact activeClassName="active" to="/register">
+                Sign Up
+              </NavLink>
+            </li>
+          </>
+        )}
+      </ul>
       <Switch>
         <Route exact path={["/", "/home"]} component={Home} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/profile" component={Profile} />
+        <Route path="/event/:id" component={EventBoard} />
         <Route path="/user" component={BoardUser} />
         <Route path="/admin" component={BoardAdmin} />
       </Switch>
-</>
-    
-    
+    </>
   );
 };
 

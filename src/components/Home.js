@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 
+import { Col, Container, Row, Form, Button } from "react-bootstrap";
+
 import UserService from "../services/user.service";
+import HowToUse from "../helper/howToUse";
 
 const Home = () => {
   const [content, setContent] = useState("");
@@ -25,7 +28,7 @@ const Home = () => {
 
   return (
     <div>
-     
+     <HowToUse/>
         <h3>{content}</h3>
      
     </div>
