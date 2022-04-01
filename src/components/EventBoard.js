@@ -5,7 +5,6 @@ import EventBus from "../common/EventBus";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 
-import Dropdown from "react-bootstrap/Dropdown";
 function EventBoard() {
   const { id } = useParams();
 
@@ -22,9 +21,11 @@ function EventBoard() {
   const initialValueTable = { shape: "sqaure", size: 2, tableId: -1 };
   const [table, setTable] = useState(initialValueTable);
 
-  const initialValueNewTable = { shape: "sqaure", size: ''};
+  const initialValueNewTable = { shape: "sqaure", size: "" };
   const [newTable, setNewTable] = useState(initialValueNewTable);
-  //const [event, setEvent] = useState({});
+  
+  const initialValueNewPerson = { name: ""};
+  const [newPerson, setNewPerson] = useState(initialValueNewPerson);
 
   const updateContent = () => {
     //Cheks which user is logged in. If user owns event --> Edit priviliges. If not --> view only.
@@ -96,15 +97,38 @@ function EventBoard() {
       updateContent();
     });
   };
-  const onChangeNewTable = (evt) => {
 
+  //createPerson; //Might change to handleCreatePersons
+  const handleCreatePerson = (evt) => {
+    evt.preventDefault();
+    console.log("SUBMIT!! --> handleCreatePerson");
+    console.log(newPerson);
+    const arr = evt.target.id.split(",");
+    console.log(evt.target.id);
+    const tableId = arr[1]
+    console.log(tableId)
+    UserService.createPerson(newPerson, tableId).then((response) => {
+      console.log(response);
+      updateContent();
+    });
+  };
+  const onChangeNewTable = (evt) => {
     //const arr = evt.target.id.split(",");
     //const property = arr[1]
     //Shape harcoded for now
     const value = evt.target.value;
-      setNewTable({ ...newTable, size: value, shape: 'square' });
-    
+    setNewTable({ ...newTable, size: value, shape: "square" });
+
     console.log(newTable);
+  };
+
+  const onChangeNewPerson = (evt) => {
+  
+    
+    const value = evt.target.value;
+    setNewPerson({ ...newPerson, name: value });
+
+    console.log(newPerson);
   };
 
   return (
@@ -120,17 +144,19 @@ function EventBoard() {
         Event time: <strong>{content.time}</strong>
       </p>
 
-      <h1 className="text-center mt-2 mb-2">Your Tables</h1>
+      <h1 className="text-center mt-2">Your Tables</h1>
       {content.tablesList.at(0).id !== -1 ? (
         <>
           {content.tablesList.map((table, index) => (
-            <>
-              <h2 id={index}>Table number {index}</h2>
+            <div key={table} className="card bg-light mb-3">
+              <div className="card-header">
+                <h5 className="card-title">Table number {index}</h5>
+              </div>
               <Form onSubmit={handleTableSubmit}>
                 <div className="form-group">
                   <label htmlFor="shape">Shape</label>
                   <select id={["shape", table.id]} className="form-select">
-                    <option selected>
+                    <option value={content.tablesList.at(index).shape}>
                       {content.tablesList.at(index).shape}
                     </option>
                     <option disabled value="circle">
@@ -146,7 +172,7 @@ function EventBoard() {
                     id={["size", table.id]}
                     className="form-select"
                   >
-                    <option defualtValue={content.tablesList.at(index).size}>
+                    <option value={content.tablesList.at(index).size}>
                       {content.tablesList.at(index).size}
                     </option>
                     <option value={4}>4</option>
@@ -154,13 +180,55 @@ function EventBoard() {
                   </select>
                 </div>
 
-                <button className="btn btn-success">Save</button>
-                <button className="btn btn-danger">Delete</button>
+                <button className="btn btn-success mt-2">Save</button>
+                <button className="btn btn-danger mt-2">Delete</button>
               </Form>
-              {table.persons.map((person, index) => (
-                <h3>Person</h3>
-              ))}
-            </>
+              {console.log(content.tablesList.at(index).persons.length)}
+              {content.tablesList.at(index).size >
+              content.tablesList.at(index).persons.length ? (
+                <>
+                  {table.persons.map((person, index) => (
+                    <>
+                      <li key={person.id} id={["person", person.id]}>
+                        {JSON.stringify(person)}
+                      </li>
+                    </>
+                  ))}
+                  <>
+                    <Form
+                      id={["person", table.id]}
+                      onSubmit={handleCreatePerson}
+                    >
+                      <div className="form-group">
+                        <label htmlFor="person">Person</label>
+                        <Input
+                          type="text"
+                          id={["person", table.id]}
+                          className="form-control"
+                          name="person"
+                          onChange={onChangeNewPerson}
+                        />
+                      </div>
+                      <button className="btn btn-info">Add Person</button>
+                    </Form>
+                  </>
+                </>
+              ) : (
+                <>
+                <h4 className="mt-2">Persons:</h4>
+                  {table.persons.map((person, index) => (
+                    <>
+                      <li key={[person,index]} id={["person", person.id]}>
+                        {JSON.stringify(person)}
+                      </li>
+                    </>
+                  ))}
+                  <div className="alert alert-danger" role="alert">
+                    This table is full!
+                  </div>
+                </>
+              )}
+            </div>
           ))}
         </>
       ) : (
@@ -174,7 +242,7 @@ function EventBoard() {
           <div className="form-group">
             <label htmlFor="shape">Shape</label>
             <select id={["new", "shape"]} className="form-select">
-              <option defaultValue={'square'}>Sqaure</option>
+              <option value={"square"}>Sqaure</option>
               <option disabled value="circle">
                 Circle
               </option>

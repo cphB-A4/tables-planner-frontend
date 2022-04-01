@@ -38,7 +38,6 @@ const Profile = () => {
     //Get all events by user id
     UserService.getAllEventsByUser().then(
       (response) => {
-        console.log(response.data);
         //setContent(response.data.msg);
         setEventsToShow(response.data);
       },

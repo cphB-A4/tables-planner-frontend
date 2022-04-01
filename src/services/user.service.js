@@ -18,6 +18,13 @@ const createTable = (table, eventId) => {
   });
 };
 
+//Might change to createPersons
+const createPerson = (person, tableId) => {
+  return axios.post(API_URL + "user/createPerson/" + tableId, person, {
+    headers: authHeader(),
+  });
+};
+
 const getAllEventsByUser = () => {
   return axios.get(API_URL + "user/get-all-events-by-user", {
     headers: authHeader()
@@ -53,5 +60,6 @@ export default {
   getAllEventsByUser,
   getEventById,
   editTable,
-  createTable
+  createTable,
+  createPerson,
 };
