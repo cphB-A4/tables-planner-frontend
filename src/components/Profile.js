@@ -1,6 +1,7 @@
 import AuthService from "../services/auth.service";
 import { Col, Container, Row, Button } from "react-bootstrap";
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -27,8 +28,11 @@ const Profile = () => {
    const [successful, setSuccessful] = useState(false);
    const [content, setContent] = useState([]); const [eventsToShow, setEventsToShow] = useState([]);
 
+   const [eventId, setEventId] = useState(undefined)
+
   const form = useRef();
   const checkBtn = useRef();
+  const { push } = useHistory();
 
   const getAllEventsByUser = () => {
     //Get all events by user id
@@ -75,6 +79,7 @@ const Profile = () => {
       UserService.createEvent(event).then(
         (response) => {
           console.log(response);
+          setEventId(response.data.id);
           setMessage("Event succesfully created");
           setSuccessful(true);
           //Update event table
@@ -169,7 +174,12 @@ const Profile = () => {
             >
               {message}
               <div className="text-center mt-2">
-                <button className="btn btn-dark ">Link to Event</button>
+                <button
+                  className="btn btn-dark  "
+                  onClick={() => push("/event/" + eventId)}
+                >
+                  Link to Event
+                </button>
               </div>
             </div>
           </div>
@@ -177,9 +187,13 @@ const Profile = () => {
         <CheckButton style={{ display: "none" }} ref={checkBtn} />
       </Form>
       {eventsToShow.length > 0 ? (
-        
-        <EventTable list={eventsToShow} setEventId={() => {console.log('implement me')}} />
-    ) : (
+        <EventTable
+          list={eventsToShow}
+          setEventId={() => {
+            console.log("implement me");
+          }}
+        />
+      ) : (
         ""
       )}
     </div>

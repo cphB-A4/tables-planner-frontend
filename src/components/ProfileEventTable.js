@@ -1,6 +1,9 @@
 import { Table } from "react-bootstrap";
 import React from "react";
+import { useHistory } from "react-router-dom";
 function EventTable({ list, setEventId }) {
+    const { push } = useHistory();
+
   return (
     <div className="mt-5">
       <h3 className="text-center">Your Events</h3>
@@ -18,7 +21,9 @@ function EventTable({ list, setEventId }) {
               <td>{event.title}</td>
               <td>{event.time}</td>
               <td>
-                <button className="btn btn-warning">Edit</button>
+                <button className="btn btn-warning" onClick={() => push("/event/" + event.id)}>
+                  Edit
+                </button>
 
                 <button className="btn btn-danger mt-1">Delete</button>
               </td>

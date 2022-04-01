@@ -12,13 +12,29 @@ const createEvent = (event) => {
     headers: authHeader()
   });
 };
+const createTable = (table, eventId) => {
+  return axios.post(API_URL + "user/createTable/" + eventId, table, {
+    headers: authHeader(),
+  });
+};
 
 const getAllEventsByUser = () => {
   return axios.get(API_URL + "user/get-all-events-by-user", {
     headers: authHeader()
   });
-  
 }
+
+const getEventById = (eventId) => {
+  return axios.get(API_URL + "user/event/"+ eventId , {
+    headers: authHeader(),
+  });
+};
+
+const editTable = (table) => {
+  return axios.put(API_URL + "user/table/" + table.tableId, table, {
+    headers: authHeader(),
+  });
+};
 
 const getUserBoard = () => {
   return axios.get(API_URL + "info/user", { headers: authHeader() });
@@ -34,5 +50,8 @@ export default {
   getUserBoard,
   getAdminBoard,
   createEvent,
-  getAllEventsByUser
+  getAllEventsByUser,
+  getEventById,
+  editTable,
+  createTable
 };
