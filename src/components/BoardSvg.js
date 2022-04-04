@@ -2,13 +2,25 @@ import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import SVG from "react-inlinesvg";
+import {
+  Col,
+  Container,
+  Row,
+  Form,
+  Button,
+  FormControl,
+  Alert,
+} from "react-bootstrap";
 
 const BoardSvg = () => {
   const [content, setContent] = useState("");
+   const [error, setError] = useState(false);
 
     const { id } = useParams();
+       const { push } = useHistory();
+       
 
   useEffect(() => {
      UserService.getSvgById(id).then(
@@ -23,7 +35,7 @@ const BoardSvg = () => {
              error.response.data.message) ||
            error.message ||
            error.toString();
-
+setError(true);
          setContent(_content);
        }
      );
@@ -40,6 +52,17 @@ const BoardSvg = () => {
         </div>
       ) : (
         ""
+      )}
+      {error && (
+        <Alert className="mt-3" variant="danger">
+          <Alert.Heading>Error</Alert.Heading>
+          <p>{content}</p>
+          <div className="text-center">
+            <button className="btn btn-dark" onClick={() => push("/home")}>
+              Home
+            </button>
+          </div>
+        </Alert>
       )}
     </div>
   );
