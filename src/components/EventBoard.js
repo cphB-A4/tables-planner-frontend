@@ -4,6 +4,7 @@ import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import SVG from "react-inlinesvg";
 
 function EventBoard() {
   const { id } = useParams();
@@ -18,14 +19,17 @@ function EventBoard() {
   };
   const [content, setContent] = useState(initialValue);
 
-  const initialValueTable = { shape: "sqaure", size: 2, tableId: -1 };
+  const initialValueTable = { shape: "square", size: 2, tableId: -1 };
   const [table, setTable] = useState(initialValueTable);
 
-  const initialValueNewTable = { shape: "sqaure", size: "" };
+  const initialValueNewTable = { shape: "square", size: "" };
   const [newTable, setNewTable] = useState(initialValueNewTable);
   
   const initialValueNewPerson = { name: ""};
   const [newPerson, setNewPerson] = useState(initialValueNewPerson);
+
+  //svg state
+  const [showSvg, setShowSvg] = useState("");
 
   const updateContent = () => {
     //Cheks which user is logged in. If user owns event --> Edit priviliges. If not --> view only.
@@ -50,6 +54,33 @@ function EventBoard() {
       }
     );
   };
+
+  const generateSvg = () => {
+    console.log(id)
+      UserService.getSvgById(id).then(
+        (response) => {
+          console.log(response);
+          setShowSvg(response.data);
+       
+
+          
+        },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+
+          setShowSvg(_content);
+
+          if (error.response && error.response.status === 401) {
+            EventBus.dispatch("logout");
+          }
+        }
+      );
+  }
   useEffect(() => {
     updateContent();
   }, []);
@@ -131,6 +162,16 @@ function EventBoard() {
     console.log(newPerson);
   };
 
+  const deleteTable = (evt) => {
+    evt.preventDefault();
+    const tableId = evt.target.value
+    UserService.deleteTable(tableId).then((response) => {
+      console.log(response);
+      updateContent();
+    });
+console.log('you clicked delete')
+  }
+
   return (
     <div>
       <h3 className="text-center">{content.title}</h3>
@@ -152,7 +193,7 @@ function EventBoard() {
               <div className="card-header">
                 <h5 className="card-title">Table number {index}</h5>
               </div>
-              <Form onSubmit={handleTableSubmit}>
+              <Form>
                 <div className="form-group">
                   <label htmlFor="shape">Shape</label>
                   <select id={["shape", table.id]} className="form-select">
@@ -180,8 +221,19 @@ function EventBoard() {
                   </select>
                 </div>
 
-                <button className="btn btn-success mt-2">Save</button>
-                <button className="btn btn-danger mt-2">Delete</button>
+                <button
+                  onClick={handleTableSubmit}
+                  className="btn btn-success mt-2"
+                >
+                  Save
+                </button>
+                <button
+                  value={table.id}
+                  onClick={deleteTable}
+                  className="btn btn-danger mt-2"
+                >
+                  Delete
+                </button>
               </Form>
               {console.log(content.tablesList.at(index).persons.length)}
               {content.tablesList.at(index).size >
@@ -215,10 +267,10 @@ function EventBoard() {
                 </>
               ) : (
                 <>
-                <h4 className="mt-2">Persons:</h4>
+                  <h4 className="mt-2">Persons:</h4>
                   {table.persons.map((person, index) => (
                     <>
-                      <li key={[person,index]} id={["person", person.id]}>
+                      <li key={[person, index]} id={["person", person.id]}>
                         {JSON.stringify(person)}
                       </li>
                     </>
@@ -242,7 +294,7 @@ function EventBoard() {
           <div className="form-group">
             <label htmlFor="shape">Shape</label>
             <select id={["new", "shape"]} className="form-select">
-              <option value={"square"}>Sqaure</option>
+              <option value={"square"}>Square</option>
               <option disabled value="circle">
                 Circle
               </option>
@@ -259,13 +311,30 @@ function EventBoard() {
               <option>Choose a size</option>
               <option value={2}>2</option>
               <option value={4}>4</option>
-              <option value={8}>8</option>
+              
             </select>
           </div>
 
           <button className="btn btn-success">Add Table</button>
         </Form>
       </>
+
+      <h3 className="text-center">Show Table Plan</h3>
+      <div className="text-center">
+        <button
+          onClick={generateSvg}
+          className="text-center btn btn-primary mt-3 mb-2"
+        >
+          Show SVG
+        </button>
+      </div>
+      {showSvg !== "" ? (
+        <div>
+          <SVG src={showSvg} />
+        </div>
+      ) : (
+        <div>Click button to generate SVG!</div>
+      )}
     </div>
   );
 }

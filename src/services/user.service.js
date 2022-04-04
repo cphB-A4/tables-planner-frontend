@@ -37,8 +37,20 @@ const getEventById = (eventId) => {
   });
 };
 
+const getSvgById = (eventId) => {
+  return axios.get(API_URL + "svg/generatesvg/" + eventId, {
+    headers: authHeader(),
+  });
+};
+
 const editTable = (table) => {
   return axios.put(API_URL + "user/table/" + table.tableId, table, {
+    headers: authHeader(),
+  });
+};
+
+const deleteTable = (tableId) => {
+  return axios.delete(API_URL + "user/deleteTable/" + tableId, {
     headers: authHeader(),
   });
 };
@@ -62,4 +74,6 @@ export default {
   editTable,
   createTable,
   createPerson,
+  deleteTable,
+  getSvgById
 };
