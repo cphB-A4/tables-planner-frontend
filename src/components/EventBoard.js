@@ -173,8 +173,8 @@ console.log('you clicked delete')
   }
 
   return (
-    <div>
-      <h3 className="text-center">{content.title}</h3>
+    <div className="mt-2 mb-2">
+      <h1 className="text-center">{content.title}</h1>
       <p>
         Event id: <strong>{content.id}</strong>
       </p>
@@ -242,7 +242,7 @@ console.log('you clicked delete')
                   {table.persons.map((person, index) => (
                     <>
                       <li key={person.id} id={["person", person.id]}>
-                        {JSON.stringify(person)}
+                        {person.name}
                       </li>
                     </>
                   ))}
@@ -261,7 +261,7 @@ console.log('you clicked delete')
                           onChange={onChangeNewPerson}
                         />
                       </div>
-                      <button className="btn btn-info">Add Person</button>
+                      <button className="btn btn-info mt-2">Add Person</button>
                     </Form>
                   </>
                 </>
@@ -271,7 +271,7 @@ console.log('you clicked delete')
                   {table.persons.map((person, index) => (
                     <>
                       <li key={[person, index]} id={["person", person.id]}>
-                        {JSON.stringify(person)}
+                        {person.name}
                       </li>
                     </>
                   ))}
@@ -311,16 +311,15 @@ console.log('you clicked delete')
               <option>Choose a size</option>
               <option value={2}>2</option>
               <option value={4}>4</option>
-              
             </select>
           </div>
 
-          <button className="btn btn-success">Add Table</button>
+          <button className="btn btn-success mt-3">Add Table</button>
         </Form>
       </>
+      <div className="text-center mt-5">
+        <h1 className="">Show Table Plan</h1>
 
-      <h3 className="text-center">Show Table Plan</h3>
-      <div className="text-center">
         <button
           onClick={generateSvg}
           className="text-center btn btn-primary mt-3 mb-2"
@@ -333,7 +332,7 @@ console.log('you clicked delete')
           <SVG src={showSvg} />
         </div>
       ) : (
-        <div>Click button to generate SVG!</div>
+        ""
       )}
     </div>
   );

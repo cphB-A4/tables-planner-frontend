@@ -11,6 +11,7 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import BoardUser from "./components/BoardUser";
 import BoardAdmin from "./components/BoardAdmin";
+import BoardSvg from "./components/BoardSvg";
 
 // import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
@@ -106,6 +107,7 @@ const App = () => {
         <Route path="/event/:id" component={EventBoard} />
         <Route path="/user" component={BoardUser} />
         <Route path="/admin" component={BoardAdmin} />
+        <Route path="/svg/:id" component={BoardSvg} />
       </Switch>
     </>
   );
