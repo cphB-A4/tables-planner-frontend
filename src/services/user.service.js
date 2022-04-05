@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:8080/tables-planner/api/";
+const API_URL = "https://mustitokmak.com/tomcat/tables-planner/api/";
 
 const getPublicContent = () => {
   return axios.get(API_URL + "info");
