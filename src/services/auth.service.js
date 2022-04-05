@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/tables-planner/api/";
+const API_URL = "https://mustitokmak.com/tomcat/tables-planner/api/";
 
 const register = (username, password, email) => {
   return axios.post(API_URL + "register", {
